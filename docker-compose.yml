@@ -1,0 +1,19 @@
+version: '3'
+
+networks:
+  redis-net:
+    driver: bridge
+
+services:
+  redis:
+    hostname: redis
+    image: redis
+    restart: always
+    networks:
+      - redis-net
+  worker:
+    hostname: worker
+    build: .
+    networks:
+      - redis-net
+    entrypoint: [ "celery", "-A", "main", "worker", "-l", "info" ]
